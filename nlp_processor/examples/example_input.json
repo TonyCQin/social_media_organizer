@@ -1,0 +1,7 @@
+{
+  "url": "https://www.tiktok.com/@example/video/123",
+  "caption": "Brunch at Bluebird Cafe",
+  "hashtags": ["coffee", "brunch"],
+  "transcript": "We stopped by Bluebird Cafe for an amazing latte.",
+  "metadata": {"uploader": "@example", "duration_s": 34}
+}

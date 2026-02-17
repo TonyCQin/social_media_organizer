@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Shortform Places — Dashboard</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px }
+      .place { border-bottom: 1px solid #ddd; padding: 8px 0 }
+    </style>
+  </head>
+  <body>
+    <h1>Places Ingested</h1>
+    <div id="list">Loading…</div>
+
+    <script>
+      async function load() {
+        try {
+          const res = await fetch('/locations');
+          const data = await res.json();
+          const el = document.getElementById('list');
+          if (!data.length) { el.innerHTML = '<i>No places stored yet</i>'; return }
+          el.innerHTML = data.map(p => `
+            <div class="place">
+              <b>${p.detected_name || 'Unknown'}</b> — ${p.category || 'uncategorized'}<br>
+              <small>${p.caption || ''}</small><br>
+              <a href="${p.url}" target="_blank">Source</a>
+            </div>
+          `).join('\n');
+        } catch (err) {
+          document.getElementById('list').innerText = 'Error loading places';
+        }
+      }
+      load();
+    </script>
+  </body>
+</html>

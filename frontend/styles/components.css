@@ -1,0 +1,87 @@
+// Component styles
+
+.place-card {
+  background: #f9f9f9;
+  border-left: 4px solid #667eea;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  transition: box-shadow 0.3s;
+}
+
+.place-card:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.place-card h3 {
+  margin-bottom: 0.5rem;
+  color: #667eea;
+}
+
+.place-card .category {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.place-card .caption {
+  font-style: italic;
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.place-card .hashtags {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.place-card .meta {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.place-card a {
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* Stats Panel */
+
+.stats-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.stat h4 {
+  margin-bottom: 0.5rem;
+  color: #667eea;
+}
+
+.stat .value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.categories h4 {
+  margin-bottom: 1rem;
+  color: #667eea;
+}
+
+.category-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.category-stat .count {
+  font-weight: bold;
+  color: #667eea;
+}
+
+@media (max-width: 768px) {
+  .stats-panel {
+    grid-template-columns: 1fr;
+  }
+}
