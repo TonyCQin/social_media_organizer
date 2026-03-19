@@ -8,7 +8,6 @@ atllovesmo/
 
 # Generated parser outputs (large data artifacts)
 nlp_processor/examples/instagram_posts*.ndjson
-nlp_processor/examples/instagram_posts*.csv
 nlp_processor/examples/instagram_posts*.json
 
 # Local SQLite data artifacts (keep schema.sql tracked)
