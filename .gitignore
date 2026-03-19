@@ -1,0 +1,17 @@
+# Python cache / compiled files
+__pycache__/
+*.py[cod]
+
+# Scraped/raw dataset folders and archives
+atllovesmo/
+*.zip
+
+# Generated parser outputs (large data artifacts)
+nlp_processor/examples/instagram_posts*.ndjson
+nlp_processor/examples/instagram_posts*.csv
+nlp_processor/examples/instagram_posts*.json
+
+# Local SQLite data artifacts (keep schema.sql tracked)
+nlp_processor/storage/*.db
+nlp_processor/storage/*.sqlite
+nlp_processor/storage/*.sqlite3
