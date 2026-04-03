@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS normalized_posts (
     parser_version TEXT NOT NULL,
     ingest_status TEXT NOT NULL DEFAULT 'ingested',
     nlp_status TEXT NOT NULL DEFAULT 'pending',
+    url_status TEXT DEFAULT 'unchecked',
     last_error TEXT,
     ingested_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -83,3 +84,15 @@ CREATE TABLE IF NOT EXISTS nlp_enrichments (
     UNIQUE (post_id, model_version),
     FOREIGN KEY (post_id) REFERENCES normalized_posts(post_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS video_transcripts (
+    post_id TEXT PRIMARY KEY,
+    video_url TEXT,
+    transcript TEXT,
+    confidence REAL,
+    model_version TEXT NOT NULL,
+    processed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES normalized_posts(post_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_video_transcripts_model ON video_transcripts(model_version);

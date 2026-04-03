@@ -78,3 +78,50 @@ python -m nlp_processor.db_summary --db nlp_processor/storage/social_media.db
 - `normalized_posts`: one row per post with flattened core metadata and pipeline statuses
 - `post_hashtags`, `post_mentions`, `post_tagged_users`: normalized multi-value fields
 - `nlp_enrichments`: versioned NLP output table for later milestone integration
+
+## Video URL validation + MP4 transcription
+
+For video-oriented processing, two scripts are included:
+
+- `check_video_urls.py`: validates existing `video_url` values and updates `normalized_posts.url_status`
+- `transcribe_mp4s.py`: transcribes local `.mp4` files and stores text in `video_transcripts`
+
+Install dependencies:
+
+```bash
+pip install -r nlp_processor/requirements.txt
+```
+
+Validate video URLs (sample run):
+
+```bash
+python -m nlp_processor.check_video_urls --db nlp_processor/storage/social_media.db --limit 25 --delay 0.2 --report-csv nlp_processor/examples/video_url_validation_report.csv
+```
+
+Transcribe local MP4 files (sample run):
+
+```bash
+python -m nlp_processor.transcribe_mp4s --mp4-dir atllovesmo --db nlp_processor/storage/social_media.db --model tiny --limit 3 --output-dir nlp_processor/examples/transcripts
+```
+
+## Metadata-based post categorization
+
+`categorize_posts.py` classifies posts using caption/hashtags/mentions/transcript/location metadata.
+
+Current rule taxonomy:
+
+- Meal type: `breakfast`, `brunch`, `lunch`, `dinner`, `dessert`, `drinks`, `snack`, `unknown`
+- Cuisine (multi-label): e.g. `mexican`, `italian`, `japanese`, `korean`, `vegan`, `coffee_cafe`
+- Content type: `food_spot`, `event`, `activity`, `mixed`
+
+The script writes:
+
+- DB upserts into `nlp_enrichments` with model version tag
+- post status updates in `normalized_posts.nlp_status = 'categorized'`
+- CSV report for review/demo output
+
+Sample run:
+
+```bash
+python -m nlp_processor.categorize_posts --db nlp_processor/storage/social_media.db --limit 25 --model-version rules-food-events-v1 --output-csv nlp_processor/examples/post_categories_report_sample.csv
+```
