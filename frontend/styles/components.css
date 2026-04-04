@@ -1,4 +1,10 @@
-// Component styles
+/* Component styles */
+
+#places-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
 
 .place-card {
   background: #f9f9f9;
@@ -11,6 +17,13 @@
 
 .place-card:hover {
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.place-image {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  display: block;
 }
 
 .place-card h3 {
@@ -44,7 +57,7 @@
   font-weight: bold;
 }
 
-/* Stats Panel */
+/* Stats panel */
 
 .stats-panel {
   display: grid;
