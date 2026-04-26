@@ -11,7 +11,16 @@ MEAL_RULES: Dict[str, Sequence[str]] = {
     "breakfast": ["breakfast", "bagel", "pancake", "waffle", "eggs", "omelet", "omelette"],
     "brunch": ["brunch", "mimosa", "benedict", "avocado toast"],
     "lunch": ["lunch", "sandwich", "lunch special", "midday"],
-    "dinner": ["dinner", "date night", "supper", "tasting menu"],
+    "dinner": [
+        "dinner",
+        "date night",
+        "supper",
+        "tasting menu",
+        "main course",
+        "entree",
+        "entrees",
+        "dinner menu",
+    ],
     "dessert": ["dessert", "ice cream", "gelato", "cake", "cookie", "donut", "sweet tooth"],
     "drinks": [
         "cocktail",
@@ -23,10 +32,7 @@ MEAL_RULES: Dict[str, Sequence[str]] = {
         "wine",
         "beer",
         "brewery",
-        "bar",
         "mocktail",
-        "drink",
-        "drinks",
         "happy hour",
         "margarita",
         "martini",
@@ -40,12 +46,30 @@ MEAL_RULES: Dict[str, Sequence[str]] = {
         "shots",
         "aperitif",
     ],
+    "all_day": [
+        "all day",
+        "anytime",
+        "any time",
+        "all-day",
+        "available all day",
+        "all day menu",
+        "all-day menu",
+        "morning to night",
+        "breakfast to dinner",
+        "open all day",
+    ],
     "snack": ["snack", "quick bite", "street food", "small bites"],
 }
 
 
 CUISINE_RULES: Dict[str, Sequence[str]] = {
-    "american": ["american", "burger", "hot dog", "fried chicken", "southern"],
+    "american": [
+        "american",
+        "american food",
+        "american cuisine",
+        "classic american",
+        "diner",
+    ],
     "mexican": ["mexican", "taco", "burrito", "quesadilla", "birria", "elote"],
     "italian": ["italian", "pasta", "pizza", "risotto", "gnocchi"],
     "japanese": ["japanese", "sushi", "ramen", "omakase", "izakaya", "udon"],
@@ -120,6 +144,12 @@ def classify_meal_type(text_blob: str) -> Tuple[str, float, Dict[str, List[str]]
 
     if not scores:
         return "unknown", 0.35, {}
+
+    if "dinner" in scores and "drinks" in scores:
+        dinner_hits = scores["dinner"]
+        drinks_hits = scores["drinks"]
+        if dinner_hits >= 1 and drinks_hits <= dinner_hits + 1:
+            scores["dinner"] = max(scores["dinner"], scores["drinks"] + 1)
 
     best_label = max(scores, key=scores.get)
     confidence = min(0.55 + 0.1 * scores[best_label], 0.95)

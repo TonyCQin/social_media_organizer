@@ -30,12 +30,13 @@ MEAL_TYPE_REFERENCES = {
     "dinner": "dinner evening meal date night supper entree",
     "dessert": "dessert sweet cake ice cream candy chocolate",
     "drinks": "drinks cocktails beer wine bar happy hour alcohol liquor spirits",
+    "all_day": "all day all-day menu breakfast to dinner anytime dining",
     "snack": "snack quick bite appetizer street food",
     "unknown": "food meal eating",
 }
 
 CUISINE_TYPE_REFERENCES = {
-    "american": "american burger hot dog fried chicken bbq southern",
+    "american": "american cuisine american diner comfort food southern food",
     "mexican": "mexican taco burrito quesadilla salsa",
     "italian": "italian pasta pizza risotto gnocchi",
     "japanese": "japanese sushi ramen omakase izakaya udon",
@@ -49,6 +50,10 @@ CUISINE_TYPE_REFERENCES = {
     "vegan": "vegan plant-based dairy free vegetarian",
     "bakery": "bakery pastry croissant bread donut",
     "coffee_cafe": "coffee cafe espresso latte matcha cappuccino",
+}
+
+CUISINE_MIN_THRESHOLDS = {
+    "american": 0.52,
 }
 
 CONTENT_TYPE_REFERENCES = {
@@ -110,7 +115,7 @@ class NPLRefiner:
             refined_label = top_label
             refined_confidence = min(baseline_confidence * 0.95 + top_score * 0.05, 0.95)
             evidence["reason"] = "embedding_agrees_boost_baseline"
-        elif top_score > 0.60 and baseline_label != "unknown" and baseline_confidence < 0.70:
+        elif top_score > 0.68 and baseline_label != "unknown" and baseline_confidence < 0.55:
             refined_label = top_label
             refined_confidence = min(top_score, 0.90)
             evidence["override"] = True
@@ -128,14 +133,15 @@ class NPLRefiner:
         text_embedding = self.embed_text(text)
         similarities = util.cos_sim(text_embedding, self.cuisine_embeddings)[0]
 
-        threshold = 0.40
+        threshold = 0.42
         refined: List[str] = []
         sim_map: Dict[str, float] = {}
 
         for idx, score in enumerate(similarities):
             score_value = float(score.item())
-            if score_value > threshold:
-                cuisine = self.cuisine_labels[idx]
+            cuisine = self.cuisine_labels[idx]
+            cuisine_threshold = CUISINE_MIN_THRESHOLDS.get(cuisine, threshold)
+            if score_value > cuisine_threshold:
                 refined.append(cuisine)
                 sim_map[cuisine] = round(score_value, 3)
 
@@ -151,9 +157,19 @@ class NPLRefiner:
             "reason": "",
         }
 
+        best_similarity = max(sim_map.values()) if sim_map else 0.0
+
         if not refined:
             refined = baseline_cuisines
             evidence["reason"] = "no_strong_embedding_matches_keep_baseline"
+        elif (
+            baseline_set
+            and refined_set != baseline_set
+            and refined_set.isdisjoint(baseline_set)
+            and best_similarity < 0.52
+        ):
+            refined = sorted(baseline_set | refined_set)
+            evidence["reason"] = "embedding_disagrees_with_baseline_merge_labels"
         elif refined_set == baseline_set:
             evidence["reason"] = "embedding_confirms_baseline"
         else:
