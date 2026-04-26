@@ -1,37 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shortform Places Dashboard</title>
-  <link rel="stylesheet" href="styles/global.css">
-  <link rel="stylesheet" href="styles/components.css">
-</head>
-<body>
-  <div id="app">
-    <header>
-      <h1>Short-Form Places Dashboard</h1>
-      <p>Visualize saved places from short-form videos!</p>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shortform Places Dashboard</title>
+    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Places To Go Dashboard</h1>
+        <p>Compiled places from short-form videos for you to actually visit</p>
+      </header>
 
-    <main>
-      <section id="places-list">
-        <h2>Places</h2>
-        <div id="places-container">Loading...</div>
-      </section>
+      <main>
+        <section id="places-list">
+          <h2>Places</h2>
+          <input type="text" id="search-bar" placeholder="Search places..." />
+          <div id="filters"></div>
+          <div id="places-container">Loading...</div>
+        </section>
 
-      <section id="stats">
-        <h2>Stats</h2>
-        <div id="stats-container">Loading...</div>
-      </section>
-    </main>
+        <section id="stats">
+          <h2>Stats</h2>
+          <div id="stats-container">Loading...</div>
+        </section>
+      </main>
 
-    <footer>
-      <p>Powered by Shortform Media Ingest</p>
-    </footer>
-  </div>
+      <footer>
+        <p>Powered by Shortform Media Ingest</p>
+      </footer>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="index.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>
