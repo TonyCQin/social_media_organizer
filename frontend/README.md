@@ -1,42 +1,62 @@
-# Frontend Dashboard
+# Places To Go Dashboard
 
-This folder holds all dashboard UI logic: components, styles, and utilities for visualizing ingested places and NLP results.
+A lightweight frontend dashboard for exploring restaurant and venue recommendations extracted from short-form social media videos.
 
-Current setup: vanilla JavaScript + HTML/CSS (no framework yet).
+This interface displays processed location data from `final_post_classifications.csv` and allows users to search, filter, and save places they want to visit.
 
-File structure:
-- `index.html` — main entry point
-- `components/` — reusable UI components
-- `styles/` — global CSS
-- `utils/` — helper functions (API calls, etc.)
+---
 
-## Framework Decision
+## Features
 
-You can add a framework later. Current options:
+### Search
+Search places by detected venue name or cuisine.
 
-### Option 1: Stay Vanilla (Current)
-- ✓ No build step; just plain HTML/CSS/JS
-- ✓ Fast prototype and iterate
-- ✗ As app grows, code gets messy without structure
+### Category Filters
+Browse recommendations by category:
 
-### Option 2: React (npm + vite/webpack)
-- ✓ Component-based, reusable
-- ✓ Great ecosystem (react-leaflet for maps, etc.)
-- ✗ Requires build step and npm
+- Dinner
+- Drinks
+- Brunch
+- Dessert
+- Event
 
-### Option 3: Vue (npm + vite)
-- ✓ Lighter than React, easier to learn
-- ✓ Good component isolation
-- ✗ Still requires npm/build
+### Saved Places
+Users can favorite places and quickly view saved recommendations later.
 
-### Option 4: Svelte (npm + vite)
-- ✓ Very lightweight, minimal boilerplate
-- ✓ Compiles to vanilla JS
-- ✗ Requires build step
+Favorites are stored in browser `localStorage`, so they persist after refresh.
 
-**Recommendation:** Start vanilla (current), refactor to React/Vue when you have 5+ components or need interactive state management.
+### Duplicate Removal
+Multiple social media posts may mention the same venue.  
+The dashboard removes duplicate cards so each place appears once.
 
-To migrate later:
-1. Run `npm init vite@latest . -- --template react` (or vue/svelte)
-2. Move your logic into JSX components
-3. Wire API calls in useEffect hooks
+### Place Name Detection
+When source data contains generic or noisy location labels, the app uses caption mentions (`@handles`) and a weighted scoring system to infer the most likely business name.
+
+### Stats Panel
+Displays:
+
+- Total posts analyzed
+- Counts by category
+
+---
+
+## Tech Stack
+
+- HTML
+- CSS
+- Vanilla JavaScript
+- Papa Parse (CSV parsing)
+
+---
+
+## Project Structure
+
+```text
+frontend/
+├── index.html
+├── index.js
+├── styles/
+│   ├── global.css
+│   └── components.css
+└── data/
+    └── final_post_classifications.csv
