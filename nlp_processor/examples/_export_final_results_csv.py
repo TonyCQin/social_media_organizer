@@ -12,7 +12,14 @@ readable_csv = base / "final_post_classifications_readable.csv"
 conn = sqlite3.connect(str(db_path))
 conn.row_factory = sqlite3.Row
 
-rows = conn.execute("SELECT * FROM final_post_classifications ORDER BY datetime_utc DESC").fetchall()
+rows = conn.execute(
+    """
+    SELECT f.*, p.caption
+    FROM final_post_classifications f
+    LEFT JOIN normalized_posts p ON p.post_id = f.post_id
+    ORDER BY f.datetime_utc DESC
+    """
+).fetchall()
 if not rows:
     raise SystemExit("No rows in final_post_classifications")
 
@@ -25,21 +32,23 @@ with full_csv.open("w", newline="", encoding="utf-8") as f:
 
 readable_query = '''
 SELECT
-    post_id,
-    datetime_utc,
-    permalink,
-    owner_username,
-    location_name,
-    final_model_version,
-    category,
-    meal_type,
-    cuisines,
-    content_type,
-    confidence,
-    needs_review,
-    rationale
-FROM final_post_classifications
-ORDER BY datetime_utc DESC
+    f.post_id,
+    f.datetime_utc,
+    f.permalink,
+    p.caption,
+    f.owner_username,
+    f.location_name,
+    f.final_model_version,
+    f.category,
+    f.meal_type,
+    f.cuisines,
+    f.content_type,
+    f.confidence,
+    f.needs_review,
+    f.rationale
+FROM final_post_classifications AS f
+LEFT JOIN normalized_posts p ON p.post_id = f.post_id
+ORDER BY f.datetime_utc DESC
 '''
 readable_rows = conn.execute(readable_query).fetchall()
 readable_fields = list(readable_rows[0].keys())

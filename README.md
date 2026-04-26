@@ -61,6 +61,12 @@ To create a single queryable table across model layers (priority: `llm-refined-v
 python nlp_processor/refresh_final_results_table.py --db nlp_processor/storage/social_media.db
 ```
 
+To export that table into readable CSV files:
+
+```bash
+python nlp_processor/export_final_results_csv.py --db nlp_processor/storage/social_media.db
+```
+
 This refreshes `final_post_classifications` in SQLite with one row per `post_id`.
 
 Example queries:
